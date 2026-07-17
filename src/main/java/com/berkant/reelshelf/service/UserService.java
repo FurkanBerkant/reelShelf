@@ -3,7 +3,7 @@ package com.berkant.reelshelf.service;
 import com.berkant.reelshelf.security.JwtService;
 import com.berkant.reelshelf.entity.User;
 import com.berkant.reelshelf.dto.UserDTO;
-import com.berkant.reelshelf.repository.AuthRepository;
+import com.berkant.reelshelf.repository.UserRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -14,8 +14,8 @@ import org.springframework.stereotype.Service;
 
 @Service
 @AllArgsConstructor
-public class AuthService {
-    private final AuthRepository authRepository;
+public class UserService {
+    private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtService jwtService;
     private final AuthenticationManager authenticationManager;
@@ -23,9 +23,12 @@ public class AuthService {
     public void register(UserDTO userDTO) {
         User user = new User();
         String encodedPassword = passwordEncoder.encode(userDTO.getPassword());
+        if (userRepository.existsByEmail(userDTO.getEmail())) {
+            throw new IllegalArgumentException("User already exists");
+        }
         user.setEmail(userDTO.getEmail());
         user.setPassword(encodedPassword);
-        authRepository.save(user);
+        userRepository.save(user);
     }
 
 

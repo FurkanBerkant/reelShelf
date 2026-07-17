@@ -1,6 +1,6 @@
 package com.berkant.reelshelf.security;
 
-import com.berkant.reelshelf.repository.AuthRepository;
+import com.berkant.reelshelf.repository.UserRepository;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -9,9 +9,9 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class UserDetailsServiceImpl implements UserDetailsService {
-    private final AuthRepository userRepository;
+    private final UserRepository userRepository;
 
-    public UserDetailsServiceImpl(AuthRepository userRepository) {
+    public UserDetailsServiceImpl(UserRepository userRepository) {
         this.userRepository = userRepository;
     }
 
