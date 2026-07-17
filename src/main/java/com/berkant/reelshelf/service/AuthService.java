@@ -7,7 +7,8 @@ import com.berkant.reelshelf.repository.AuthRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -29,12 +30,10 @@ public class AuthService {
 
 
     public String login(UserDTO userDTO) {
-        authenticationManager.authenticate(
+        Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(userDTO.getEmail(), userDTO.getPassword())
         );
-        User user = authRepository.findByEmail(userDTO.getEmail())
-                .orElseThrow(() -> new UsernameNotFoundException("User Not Found"));
-
-        return jwtService.generateToken(user);
+        UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+        return jwtService.generateToken(userDetails);
     }
 }
