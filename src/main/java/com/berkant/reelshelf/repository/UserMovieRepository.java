@@ -8,4 +8,6 @@ import java.util.List;
 public interface UserMovieRepository extends JpaRepository<UserMovie, Long> {
 
     List<UserMovie> findByUserEmail(String email);
+
+    UserMovie findByUserEmailAndMovieId(String email, Long id);
 }

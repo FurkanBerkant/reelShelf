@@ -40,14 +40,16 @@ public class MovieService {
     public void saveMovie(AddMovieRequest addMovieRequest){
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String email = authentication.getName();
-
+        Movie movie = movieRepository.findByName(addMovieRequest.name());
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new UsernameNotFoundException("User not found"));
 
-        Movie movie = movieMapper.toMovie(addMovieRequest);
+        if (movie == null) {
+            movie = movieMapper.toMovie(addMovieRequest);
+            movieRepository.save(movie);
+        }
 
         UserMovie userMovie = movieMapper.toUserMovie(addMovieRequest);
-        movieRepository.save(movie);
         userMovie.setUser(user);
         userMovie.setMovie(movie);
         userMovieRepository.save(userMovie);
@@ -55,7 +57,12 @@ public class MovieService {
     }
 
     public void deleteMovieById(Long id){
-        movieRepository.deleteById(id);
+        UserMovie userMovie = userMovieRepository.findByUserEmailAndMovieId(SecurityContextHolder.getContext().getAuthentication().getName(), id);
+        if (userMovie == null) {
+            throw new RuntimeException("Bu film sizin listenizde bulunamadı veya size ait değil.");
+        }
+        userMovieRepository.delete(userMovie);
+
     }
 
 }

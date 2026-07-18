@@ -14,6 +14,7 @@ import java.util.Set;
 @Setter
 public class Book extends BaseEntity {
     private String author;
+    @Column(name = "name", unique = true, nullable = false)
     private String name;
     private String genre;
     private Integer numberOfPages;
