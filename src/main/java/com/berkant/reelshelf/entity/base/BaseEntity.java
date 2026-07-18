@@ -23,4 +23,10 @@ public abstract class BaseEntity {
     private LocalDateTime createdDate;
     @LastModifiedDate
     private LocalDateTime lastModifiedDate;
+
+    @PrePersist
+    protected void prePersist() {
+        createdDate = LocalDateTime.now();
+        lastModifiedDate = LocalDateTime.now();
+    }
 }

@@ -21,15 +21,18 @@ public class UserBook extends BaseEntity {
     @JoinColumn(name = "book_id", nullable = false)
     private Book book;
 
-    @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
+    @Column(name = "book_status")
     private BookStatus bookStatus;
 
+    @Column(name = "rating")
     private Integer rating;
 
+    @Column(name = "favorite")
     private Boolean favorite;
 
+    @Column(name = "current_page")
     private Integer currentPage;
 
+    @Column(name = "notes")
     private String notes;
 }

@@ -22,15 +22,7 @@ public class UserMovie extends BaseEntity {
     @JoinColumn(name = "movie_id", nullable = false)
     private Movie movie;
 
-    @Enumerated(EnumType.STRING)
+    @Column(name = "watch_status")
     private WatchStatus watchStatus;
 
-    private Integer rating;
-
-    private Boolean favorite;
-
-    private LocalDate watchedDate;
-
-    @Column(length = 1000)
-    private String notes;
 }
