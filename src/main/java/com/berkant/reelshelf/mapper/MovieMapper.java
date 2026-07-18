@@ -2,6 +2,7 @@ package com.berkant.reelshelf.mapper;
 
 
 import com.berkant.reelshelf.dto.AddMovieRequest;
+import com.berkant.reelshelf.dto.UserMovieResponse;
 import com.berkant.reelshelf.entity.Movie;
 import com.berkant.reelshelf.entity.UserMovie;
 import org.mapstruct.Mapper;
@@ -14,4 +15,8 @@ public interface MovieMapper {
     @Mapping(target = "movie", ignore = true)
     @Mapping(target = "watchStatus", expression = "java(com.berkant.reelshelf.entity.enums.WatchStatus.fromId(request.statusId()))")
     UserMovie toUserMovie(AddMovieRequest request);
+
+    @Mapping(source = "movie.name", target = "name")
+    @Mapping(source = "movie.year", target = "year")
+    UserMovieResponse toMovieResponse(UserMovie userMovie);
 }

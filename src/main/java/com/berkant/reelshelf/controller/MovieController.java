@@ -1,11 +1,14 @@
 package com.berkant.reelshelf.controller;
 
 import com.berkant.reelshelf.dto.AddMovieRequest;
+import com.berkant.reelshelf.dto.UserMovieResponse;
 import com.berkant.reelshelf.service.MovieService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController()
 @RequestMapping("/movie")
@@ -15,15 +18,8 @@ public class MovieController {
     private final MovieService movieService;
 
     @GetMapping()
-    public ResponseEntity<String> getMovie(){
-        movieService.getMovie();
-        return ResponseEntity.ok("Movie details");
-    }
-
-    @GetMapping("/{id}")
-    public ResponseEntity<String> getMovieById(@PathVariable Long id){
-        movieService.getMovieById(id);
-        return ResponseEntity.ok("Movie details");
+    public ResponseEntity<List<UserMovieResponse>> getMyMovies() {
+        return ResponseEntity.ok(movieService.getMovies());
     }
 
     @PostMapping()

@@ -1,6 +1,7 @@
 package com.berkant.reelshelf.service;
 
 import com.berkant.reelshelf.dto.AddMovieRequest;
+import com.berkant.reelshelf.dto.UserMovieResponse;
 import com.berkant.reelshelf.entity.Movie;
 import com.berkant.reelshelf.entity.User;
 import com.berkant.reelshelf.entity.UserMovie;
@@ -15,6 +16,8 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 
 @Service
 @RequiredArgsConstructor
@@ -25,12 +28,12 @@ public class MovieService {
     private final UserMovieRepository userMovieRepository;
     private final MovieMapper movieMapper;
 
-    public void getMovie(){
-        movieRepository.findAll();
-    }
-
-    public void getMovieById(Long id){
-        movieRepository.findById(id);
+    public List<UserMovieResponse> getMovies() {
+        String email = SecurityContextHolder.getContext().getAuthentication().getName();
+        return userMovieRepository.findByUserEmail(email)
+                .stream()
+                .map(movieMapper::toMovieResponse)
+                .toList();
     }
 
     @Transactional
