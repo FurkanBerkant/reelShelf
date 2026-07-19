@@ -1,6 +1,6 @@
 package com.berkant.reelshelf.dto;
 
-public record AddMovieRequest(
+public record MovieRequest(
         Long tmdbId,
         Integer statusId
 ) {}

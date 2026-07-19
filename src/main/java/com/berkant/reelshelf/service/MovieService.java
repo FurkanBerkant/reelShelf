@@ -1,9 +1,9 @@
 package com.berkant.reelshelf.service;
 
 import com.berkant.reelshelf.client.TmdbMovieClient;
-import com.berkant.reelshelf.dto.AddMovieRequest;
+import com.berkant.reelshelf.dto.MovieRequest;
 import com.berkant.reelshelf.dto.MovieSearchResponse;
-import com.berkant.reelshelf.dto.TmdbMovieDetailsResponse;
+import com.berkant.reelshelf.dto.tmdb.TmdbMovieDetailsResponse;
 import com.berkant.reelshelf.dto.UserMovieResponse;
 import com.berkant.reelshelf.entity.Movie;
 import com.berkant.reelshelf.entity.User;
@@ -49,13 +49,13 @@ public class MovieService {
     }
 
     @Transactional
-    public void saveMovie(AddMovieRequest addMovieRequest) {
+    public void saveMovie(MovieRequest movieRequest) {
         String email = getAuthenticatedEmail();
 
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new UsernameNotFoundException("User not found"));
 
-        TmdbMovieDetailsResponse tmdbMovie = tmdbMovieClient.getMovieDetails(addMovieRequest.tmdbId());
+        TmdbMovieDetailsResponse tmdbMovie = tmdbMovieClient.getMovieDetails(movieRequest.tmdbId());
 
         if (tmdbMovie == null || tmdbMovie.id() == null) {
             throw new IllegalArgumentException("Film bulunamadı.");
@@ -71,7 +71,7 @@ public class MovieService {
         UserMovie userMovie = new UserMovie();
         userMovie.setUser(user);
         userMovie.setMovie(movie);
-        userMovie.setWatchStatus(WatchStatus.fromId(addMovieRequest.statusId()));
+        userMovie.setWatchStatus(WatchStatus.fromId(movieRequest.statusId()));
 
         userMovieRepository.save(userMovie);
     }

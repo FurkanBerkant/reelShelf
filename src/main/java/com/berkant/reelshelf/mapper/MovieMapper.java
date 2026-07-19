@@ -1,7 +1,7 @@
 package com.berkant.reelshelf.mapper;
 
 
-import com.berkant.reelshelf.dto.TmdbMovieDetailsResponse;
+import com.berkant.reelshelf.dto.tmdb.TmdbMovieDetailsResponse;
 import com.berkant.reelshelf.dto.UserMovieResponse;
 import com.berkant.reelshelf.entity.Movie;
 import com.berkant.reelshelf.entity.UserMovie;

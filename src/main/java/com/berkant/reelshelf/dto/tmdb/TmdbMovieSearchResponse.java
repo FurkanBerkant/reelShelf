@@ -1,4 +1,4 @@
-package com.berkant.reelshelf.dto;
+package com.berkant.reelshelf.dto.tmdb;
 
 import java.util.List;
 

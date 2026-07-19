@@ -1,6 +1,6 @@
 package com.berkant.reelshelf.controller;
 
-import com.berkant.reelshelf.dto.AddMovieRequest;
+import com.berkant.reelshelf.dto.MovieRequest;
 import com.berkant.reelshelf.dto.MovieSearchResponse;
 import com.berkant.reelshelf.dto.UserMovieResponse;
 import com.berkant.reelshelf.service.MovieService;
@@ -24,8 +24,8 @@ public class MovieController {
     }
 
     @PostMapping()
-    public ResponseEntity<String> saveMovie(@RequestBody AddMovieRequest addMovieRequest) {
-        movieService.saveMovie(addMovieRequest);
+    public ResponseEntity<String> saveMovie(@RequestBody MovieRequest movieRequest) {
+        movieService.saveMovie(movieRequest);
         return new ResponseEntity<>("Movie Saved", HttpStatus.CREATED);
     }
 

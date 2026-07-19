@@ -1,8 +1,8 @@
 package com.berkant.reelshelf.client;
 
 import com.berkant.reelshelf.dto.MovieSearchResponse;
-import com.berkant.reelshelf.dto.TmdbMovieDetailsResponse;
-import com.berkant.reelshelf.dto.TmdbMovieSearchResponse;
+import com.berkant.reelshelf.dto.tmdb.TmdbMovieDetailsResponse;
+import com.berkant.reelshelf.dto.tmdb.TmdbMovieSearchResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
