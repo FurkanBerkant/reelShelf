@@ -1,16 +1,11 @@
 package com.berkant.reelshelf.dto;
 
-import com.berkant.reelshelf.entity.enums.WatchStatus;
-
-public record UserMovieResponse(
-        Long id,
-        Long movieId,
+public record MovieSearchResponse(
         Long tmdbId,
         String title,
         Integer releaseYear,
         String overview,
         String posterUrl,
         String originalLanguage,
-        Double voteAverage,
-        WatchStatus watchStatus
+        Double voteAverage
 ) {}

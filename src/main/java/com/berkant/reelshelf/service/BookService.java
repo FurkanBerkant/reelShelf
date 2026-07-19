@@ -8,6 +8,7 @@ import com.berkant.reelshelf.mapper.BookMapper;
 import com.berkant.reelshelf.repository.BookRepository;
 import com.berkant.reelshelf.repository.UserBookRepository;
 import com.berkant.reelshelf.repository.UserRepository;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -33,6 +34,7 @@ public class BookService {
                 .toList();
     }
 
+    @Transactional
     public void saveBook(AddBookRequest addBookRequest){
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String email = authentication.getName();

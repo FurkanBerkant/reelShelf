@@ -1,6 +1,7 @@
 package com.berkant.reelshelf.controller;
 
 import com.berkant.reelshelf.dto.AddMovieRequest;
+import com.berkant.reelshelf.dto.MovieSearchResponse;
 import com.berkant.reelshelf.dto.UserMovieResponse;
 import com.berkant.reelshelf.service.MovieService;
 import lombok.RequiredArgsConstructor;
@@ -23,14 +24,19 @@ public class MovieController {
     }
 
     @PostMapping()
-    public ResponseEntity<String> saveMovie(@RequestBody AddMovieRequest addMovieRequest){
+    public ResponseEntity<String> saveMovie(@RequestBody AddMovieRequest addMovieRequest) {
         movieService.saveMovie(addMovieRequest);
         return new ResponseEntity<>("Movie Saved", HttpStatus.CREATED);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<String> deleteMovieById(@PathVariable Long id){
+    public ResponseEntity<String> deleteMovieById(@PathVariable Long id) {
         movieService.deleteMovieById(id);
         return new ResponseEntity<>("Movie Deleted", HttpStatus.OK);
+    }
+
+    @GetMapping("/search")
+    public ResponseEntity<List<MovieSearchResponse>> searchMovies(@RequestParam String query) {
+        return ResponseEntity.ok(movieService.searchMovies(query));
     }
 }

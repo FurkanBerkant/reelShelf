@@ -13,11 +13,25 @@ import java.util.Set;
 @Getter
 @Setter
 public class Movie extends BaseEntity {
-    @Column(name = "name", unique = true, nullable = false)
-    private String name;
-    private Integer year;
-    private String genre;
-    private String description;
-    @OneToMany(mappedBy = "movie",cascade = CascadeType.ALL, orphanRemoval = true)
+
+    @Column(name = "tmdb_id", unique = true, nullable = false)
+    private Long tmdbId;
+
+    @Column(name = "title", nullable = false)
+    private String title;
+
+    private Integer releaseYear;
+
+    @Column(length = 2000)
+    private String overview;
+
+    private String posterPath;
+
+    private String originalLanguage;
+
+    private Double voteAverage;
+
+    @OneToMany(mappedBy = "movie", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<UserMovie> userMovies = new HashSet<>();
+
 }
