@@ -83,4 +83,14 @@ public class BookService {
     private String getAuthenticatedEmail() {
         return SecurityContextHolder.getContext().getAuthentication().getName();
     }
+
+    public void updateBook(Long id, Long statusId) {
+        String email = getAuthenticatedEmail();
+
+        UserBook userBook = userBookRepository.findByIdAndUserEmail(id, email)
+                .orElseThrow(() -> new RuntimeException("Bu kitap sizin listenizde bulunamadı veya size ait değil."));
+
+        userBook.setReadStatus(ReadStatus.fromId(statusId.intValue()));
+        userBookRepository.save(userBook);
+    }
 }

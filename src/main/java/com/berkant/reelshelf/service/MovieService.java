@@ -89,4 +89,13 @@ public class MovieService {
         return SecurityContextHolder.getContext().getAuthentication().getName();
     }
 
+    public void updateMovie(Long id, Long statusId) {
+        String email = getAuthenticatedEmail();
+
+        UserMovie userMovie = userMovieRepository.findByIdAndUserEmail(id, email)
+                .orElseThrow(() -> new RuntimeException("Bu film sizin listenizde bulunamadı veya size ait değil."));
+
+        userMovie.setWatchStatus(WatchStatus.fromId(statusId.intValue()));
+        userMovieRepository.save(userMovie);
+    }
 }

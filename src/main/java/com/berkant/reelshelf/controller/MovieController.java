@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController()
-@RequestMapping("/movie")
+@RequestMapping("/api/movie")
 @RequiredArgsConstructor
 public class MovieController {
 
@@ -38,5 +38,11 @@ public class MovieController {
     @GetMapping("/search")
     public ResponseEntity<List<MovieSearchResponse>> searchMovies(@RequestParam String query) {
         return ResponseEntity.ok(movieService.searchMovies(query));
+    }
+
+    @PatchMapping("/{id}/status")
+    public ResponseEntity<String> updateMovie(@PathVariable Long id, @RequestParam Long statusId) {
+        movieService.updateMovie(id, statusId);
+        return new ResponseEntity<>("Movie Updated", HttpStatus.OK);
     }
 }
