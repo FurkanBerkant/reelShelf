@@ -9,6 +9,7 @@ import com.berkant.reelshelf.entity.Movie;
 import com.berkant.reelshelf.entity.User;
 import com.berkant.reelshelf.entity.UserMovie;
 import com.berkant.reelshelf.entity.enums.WatchStatus;
+import com.berkant.reelshelf.exception.ResourceNotFoundException;
 import com.berkant.reelshelf.mapper.MovieMapper;
 import com.berkant.reelshelf.repository.MovieRepository;
 import com.berkant.reelshelf.repository.UserMovieRepository;
@@ -48,6 +49,17 @@ public class MovieService {
         return tmdbMovieClient.searchMovies(query);
     }
 
+    public UserMovieResponse getMovieDetail(Long id) {
+        String email = getAuthenticatedEmail();
+
+        UserMovie userMovie = findOwnedMovie(id, email);
+
+        return movieMapper.toMovieResponse(
+                userMovie,
+                tmdbMovieClient.buildPosterUrl(userMovie.getMovie().getPosterPath())
+        );
+    }
+
     @Transactional
     public void saveMovie(MovieRequest movieRequest) {
         String email = getAuthenticatedEmail();
@@ -76,11 +88,11 @@ public class MovieService {
         userMovieRepository.save(userMovie);
     }
 
+    @Transactional
     public void deleteMovieById(Long id) {
         String email = getAuthenticatedEmail();
 
-        UserMovie userMovie = userMovieRepository.findByIdAndUserEmail(id, email)
-                .orElseThrow(() -> new RuntimeException("Bu film sizin listenizde bulunamadı veya size ait değil."));
+        UserMovie userMovie = findOwnedMovie(id, email);
 
         userMovieRepository.delete(userMovie);
     }
@@ -89,13 +101,20 @@ public class MovieService {
         return SecurityContextHolder.getContext().getAuthentication().getName();
     }
 
+    @Transactional
     public void updateMovie(Long id, Long statusId) {
         String email = getAuthenticatedEmail();
 
-        UserMovie userMovie = userMovieRepository.findByIdAndUserEmail(id, email)
-                .orElseThrow(() -> new RuntimeException("Bu film sizin listenizde bulunamadı veya size ait değil."));
+        UserMovie userMovie = findOwnedMovie(id, email);
 
         userMovie.setWatchStatus(WatchStatus.fromId(statusId.intValue()));
         userMovieRepository.save(userMovie);
+    }
+
+    private UserMovie findOwnedMovie(Long id, String email) {
+        return userMovieRepository.findByIdAndUserEmail(id, email)
+                .orElseThrow(() -> new ResourceNotFoundException(
+                        "Bu film sizin listenizde bulunamadı veya size ait değil."
+                ));
     }
 }

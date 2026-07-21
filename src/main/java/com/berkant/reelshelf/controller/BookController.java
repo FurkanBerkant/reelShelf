@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController()
-@RequestMapping("/api/book")
+@RequestMapping("/book")
 @RequiredArgsConstructor
 public class BookController {
 
@@ -21,6 +21,11 @@ public class BookController {
     @GetMapping()
     public ResponseEntity<List<UserBookResponse>> getMyBooks() {
         return ResponseEntity.ok(bookService.getBooks());
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<UserBookResponse> getBookDetail(@PathVariable Long id) {
+        return ResponseEntity.ok(bookService.getBookDetail(id));
     }
 
     @PostMapping()

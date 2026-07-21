@@ -8,6 +8,7 @@ import com.berkant.reelshelf.dto.UserBookResponse;
 import com.berkant.reelshelf.dto.googlebooks.GoogleBooksVolumeResponse;
 import com.berkant.reelshelf.entity.*;
 import com.berkant.reelshelf.entity.enums.ReadStatus;
+import com.berkant.reelshelf.exception.ResourceNotFoundException;
 import com.berkant.reelshelf.mapper.BookMapper;
 import com.berkant.reelshelf.repository.BookRepository;
 import com.berkant.reelshelf.repository.UserBookRepository;
@@ -43,6 +44,12 @@ public class BookService {
         return googleBooksClient.searchBooks(query);
     }
 
+    public UserBookResponse getBookDetail(Long id) {
+        String email = getAuthenticatedEmail();
+
+        return bookMapper.toBookResponse(findOwnedBook(id, email));
+    }
+
     @Transactional
     public void saveBook(BookRequest bookRequest) {
         String email = getAuthenticatedEmail();
@@ -71,11 +78,11 @@ public class BookService {
         userBookRepository.save(userBook);
     }
 
+    @Transactional
     public void deleteBookById(Long id) {
         String email = getAuthenticatedEmail();
 
-        UserBook userBook = userBookRepository.findByIdAndUserEmail(id, email)
-                .orElseThrow(() -> new RuntimeException("Bu kitap sizin listenizde bulunamadı veya size ait değil."));
+        UserBook userBook = findOwnedBook(id, email);
 
         userBookRepository.delete(userBook);
     }
@@ -84,13 +91,20 @@ public class BookService {
         return SecurityContextHolder.getContext().getAuthentication().getName();
     }
 
+    @Transactional
     public void updateBook(Long id, Long statusId) {
         String email = getAuthenticatedEmail();
 
-        UserBook userBook = userBookRepository.findByIdAndUserEmail(id, email)
-                .orElseThrow(() -> new RuntimeException("Bu kitap sizin listenizde bulunamadı veya size ait değil."));
+        UserBook userBook = findOwnedBook(id, email);
 
         userBook.setReadStatus(ReadStatus.fromId(statusId.intValue()));
         userBookRepository.save(userBook);
+    }
+
+    private UserBook findOwnedBook(Long id, String email) {
+        return userBookRepository.findByIdAndUserEmail(id, email)
+                .orElseThrow(() -> new ResourceNotFoundException(
+                        "Bu kitap sizin listenizde bulunamadı veya size ait değil."
+                ));
     }
 }
