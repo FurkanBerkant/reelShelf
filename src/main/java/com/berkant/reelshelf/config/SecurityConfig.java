@@ -19,7 +19,10 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.client.RestClient;
 import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.http.client.JdkClientHttpRequestFactory;
 
+import java.net.http.HttpClient;
+import java.time.Duration;
 import java.util.List;
 
 @EnableJpaAuditing
@@ -33,7 +36,13 @@ public class SecurityConfig {
 
     @Bean
     public RestClient.Builder restClientBuilder() {
-        return RestClient.builder();
+        HttpClient httpClient = HttpClient.newBuilder()
+                .connectTimeout(Duration.ofSeconds(4))
+                .build();
+        JdkClientHttpRequestFactory requestFactory = new JdkClientHttpRequestFactory(httpClient);
+        requestFactory.setReadTimeout(Duration.ofSeconds(10));
+
+        return RestClient.builder().requestFactory(requestFactory);
     }
 
 
@@ -65,10 +74,10 @@ public class SecurityConfig {
                             "http://localhost:3000",
                             "http://localhost:5173",
                             "http://127.0.0.1:5173"
-                    ));
-                    corsConfiguration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
-                    corsConfiguration.setAllowedHeaders(List.of("*"));
+                    ));                    corsConfiguration.setAllowedMethods(List.of("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"));
+                    corsConfiguration.setAllowedHeaders(List.of("Authorization", "Content-Type", "Accept"));
                     corsConfiguration.setAllowCredentials(true);
+                    corsConfiguration.setMaxAge(3600L);
                     return corsConfiguration;
                 }))
                 .csrf(AbstractHttpConfigurer::disable)
